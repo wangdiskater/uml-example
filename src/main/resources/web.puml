@@ -1,0 +1,14 @@
+@startuml
+actor Actor as p
+participant WebBrowser  as wb
+participant Application as APP
+participant AuthorizationServer as author
+participant ContentServer as content
+
+
+p -> wb: get FB resource
+wb -> APP: request FB ACCESS
+
+
+
+@enduml

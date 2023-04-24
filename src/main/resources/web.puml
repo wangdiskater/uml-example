@@ -5,10 +5,59 @@ participant Application as APP
 participant AuthorizationServer as author
 participant ContentServer as content
 
-
+activate p
 p -> wb: get FB resource
+
+activate wb
 wb -> APP: request FB ACCESS
+activate APP
+APP --> wb: <http redirect>
+deactivate APP
+
+wb -> author: authorize
+activate author
+author --> wb: permission form
+deactivate author
+
+wb --> p: permission form
+deactivate wb
 
 
+p -> wb: user permission
+activate wb
+wb -> author: process permission
+author --> p:http redirect
 
+alt permission granted
+
+    wb -> APP: FB AuthorizationServer code
+    activate APP
+    APP -> author: FB AuthorizationServer code
+    activate author
+    author --> APP: ACCESS token
+    deactivate author
+
+    APP -> content: access FB user protected resource
+    activate content
+    content --> APP: user protected resource
+    deactivate content
+    APP --> wb: user protected resource
+    deactivate APP
+
+    wb --> p: user protected resource
+    deactivate wb
+
+else no permission
+
+    wb -> APP: no authorization
+    activate wb
+
+    activate APP
+    APP --> wb: FB resource not available
+    deactivate APP
+    wb --> p: FB resource not available
+
+    deactivate wb
+
+end
 @enduml
